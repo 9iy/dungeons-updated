@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="21" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-AoutRefMapFile=C:\Users\coold\Downloads\dungeons\build\classes\java\client\client-dungeons-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\coold\Downloads\dungeons\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21_1.1.21.1+build.3-v2.client.tiny -AinMapFileNamedIntermediary=C:\Users\coold\.gradle\caches\fabric-loom\1.21.1\net.fabricmc.yarn.1_21_1.1.21.1+build.3-v2\mappings.tiny" />
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="dungeons.main" options="-AoutRefMapFile=C:\Users\coold\Downloads\dungeons\build\classes\java\main\dungeons-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\coold\Downloads\dungeons\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21_1.1.21.1+build.3-v2.main.tiny -AinMapFileNamedIntermediary=C:\Users\coold\.gradle\caches\fabric-loom\1.21.1\net.fabricmc.yarn.1_21_1.1.21.1+build.3-v2\mappings.tiny" />
+      <module name="dungeons.test" options="-AoutRefMapFile=C:\Users\coold\Downloads\dungeons\build\classes\java\test\test-dungeons-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\coold\Downloads\dungeons\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21_1.1.21.1+build.3-v2.test.tiny -AinMapFileNamedIntermediary=C:\Users\coold\.gradle\caches\fabric-loom\1.21.1\net.fabricmc.yarn.1_21_1.1.21.1+build.3-v2\mappings.tiny" />
+    </option>
+  </component>
+</project>

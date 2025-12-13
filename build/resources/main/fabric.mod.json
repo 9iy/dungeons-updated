@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "dungeons",
+  "version": "1.0-SNAPSHOT",
+  "name": "dungeons",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/dungeons/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      { "adapter": "kotlin", "value": "me.bloo.whosthatpokemon2.dungeons.Dungeons" }
+    ],
+    "fabric-datagen": [
+      { "adapter": "kotlin", "value": "me.bloo.whosthatpokemon2.dungeons.client.DungeonsDataGenerator" }
+    ]
+  },
+  "mixins": [
+    "dungeons.mixins.json",
+    {
+      "config": "dungeons.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.2",
+    "fabric-language-kotlin": ">=1.13.5+kotlin.2.2.10",
+    "fabric": "*",
+    "minecraft": "1.21.1"
+  }
+}

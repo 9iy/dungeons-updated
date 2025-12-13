@@ -1,0 +1,16 @@
+{
+  "mappings": {
+    "me/bloo/whosthatpokemon2/dungeons/mixin/ServerPlayerEntityMixin": {
+      "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;": "Lnet/minecraft/class_3222;method_7329(Lnet/minecraft/class_1799;ZZ)Lnet/minecraft/class_1542;",
+      "dropSelectedItem": "Lnet/minecraft/class_3222;method_37413(Z)Z"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "me/bloo/whosthatpokemon2/dungeons/mixin/ServerPlayerEntityMixin": {
+        "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;": "Lnet/minecraft/class_3222;method_7329(Lnet/minecraft/class_1799;ZZ)Lnet/minecraft/class_1542;",
+        "dropSelectedItem": "Lnet/minecraft/class_3222;method_37413(Z)Z"
+      }
+    }
+  }
+}

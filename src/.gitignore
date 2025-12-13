@@ -1,0 +1,24 @@
+# Gradle
+.gradle/
+build/
+out/
+# Fabric run dir
+run/
+# IntelliJ / IDEA
+.idea/
+*.iml
+# Logs
+logs/
+*.log
+# OS noise
+.DS_Store
+Thumbs.db
+# Minecraft dev cache
+.remapped/
+# Kotlin/Java
+*.class
+# Wrapper cache (keep wrapper files below)
+!gradle/wrapper/gradle-wrapper.properties
+!gradle/wrapper/gradle-wrapper.jar
+!gradlew
+!gradlew.bat
