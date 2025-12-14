@@ -640,6 +640,19 @@ class Dungeons : ModInitializer {
                     )
             )
             .then(
+                literal("debug_banner")
+                    .requires { source -> source.hasPermission("eclipse.command.dungeons.debug") }
+                    .executes { ctx ->
+                        val player = ctx.source.playerOrThrow
+                        val repaired = DungeonRuntime.repairBannerItems(player)
+                        player.giveItemStack(DungeonRuntime.createDebugBannerStack())
+                        ctx.source.sendDungeonFeedback(
+                            "Gave a safe banner and repaired $repaired stacks for ${player.gameProfile.name}."
+                        )
+                        1
+                    }
+            )
+            .then(
                 literal("reset")
                     .requires { source -> source.hasPermission("eclipse.command.dungeons.reset") }
                     .then(argument("name", StringArgumentType.word())

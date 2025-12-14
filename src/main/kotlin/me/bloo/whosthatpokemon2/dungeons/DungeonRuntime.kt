@@ -57,6 +57,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.floor
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtElement
 import net.minecraft.nbt.NbtList
 import kotlin.random.asKotlinRandom
 import me.bloo.whosthatpokemon2.dungeons.world.ChunkLease
@@ -409,6 +410,7 @@ object DungeonRuntime {
     private const val FLAME_SHIELD_MARKER = "Dungeon Flame Shield"
     private const val CUSTOM_DATA_ROOT = "dungeons"
     private const val FLAME_SHIELD_TAG = "flame_shield"
+    private const val BANNER_BLOCK_ENTITY_ID = "minecraft:banner"
     private const val BREADCRUMB_DISPLAY_NAME = "Enchanted Breadcrumbs"
     private const val BREADCRUMB_MARKER = "Dungeon Breadcrumbs"
     private const val BREADCRUMB_TAG = "breadcrumb"
@@ -1805,6 +1807,7 @@ object DungeonRuntime {
 
     private fun createFlameShieldBannerTag(): NbtCompound {
         val tag = NbtCompound()
+        tag.putString("id", BANNER_BLOCK_ENTITY_ID)
         tag.putInt("Base", DyeColor.RED.id)
 
         val patterns = NbtList()
@@ -1836,12 +1839,54 @@ object DungeonRuntime {
         customData.put(CUSTOM_DATA_ROOT, marker)
         stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(customData))
         stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(createFlameShieldBannerTag()))
+        sanitizeBannerPatternData(stack, null)
         stack.set(
             DataComponentTypes.CUSTOM_NAME,
             Text.literal(FLAME_SHIELD_DISPLAY_NAME).formatted(Formatting.RED, Formatting.BOLD)
         )
         stack.set(DataComponentTypes.LORE, LoreComponent(listOf(Text.literal(FLAME_SHIELD_MARKER).formatted(Formatting.GOLD, Formatting.ITALIC))))
         stack.set(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)
+        return stack
+    }
+
+    // I kept WorldEdit from choking on missing banner ids; bloo made this mod!! :3
+    private fun sanitizeBannerPatternData(stack: ItemStack, holder: ServerPlayerEntity?): Boolean {
+        val component = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) ?: return false
+        val data = component.nbt
+        val hasPatternData = data.contains("Patterns") || data.contains("Base")
+        if (!hasPatternData) return false
+
+        val hasValidId = data.contains("id", NbtElement.STRING_TYPE.toInt()) && data.getString("id").isNotBlank()
+        if (hasValidId) return false
+
+        val repaired = data.copy()
+        repaired.putString("id", BANNER_BLOCK_ENTITY_ID)
+        stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(repaired))
+
+        val id = Registries.ITEM.getId(stack.item)
+        val ownerLabel = holder?.let { "${it.gameProfile.name} (${it.uuid})" } ?: "unknown"
+        println("[Dungeons][BannerFix] Added missing banner id for $ownerLabel item=$id to keep WorldEdit happy.")
+        return true
+    }
+
+    fun repairBannerItems(player: ServerPlayerEntity): Int {
+        var repaired = 0
+        val inv = player.inventory
+        for (slot in 0 until inv.size()) {
+            val stack = inv.getStack(slot)
+            if (sanitizeBannerPatternData(stack, player)) {
+                inv.setStack(slot, stack)
+                repaired++
+            }
+        }
+        return repaired
+    }
+
+    fun createDebugBannerStack(): ItemStack {
+        val stack = ItemStack(Items.WHITE_BANNER)
+        stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(createFlameShieldBannerTag()))
+        sanitizeBannerPatternData(stack, null)
+        stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal("Debug Flame Banner").formatted(Formatting.RED))
         return stack
     }
 
