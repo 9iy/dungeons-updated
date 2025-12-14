@@ -43,6 +43,7 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.particle.ParticleTypes
+import net.minecraft.util.DyeColor
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Vec3d
@@ -1802,6 +1803,31 @@ object DungeonRuntime {
         return lore?.lines?.any { it.string == SOOTHING_ICE_MARKER } == true
     }
 
+    private fun createFlameShieldBannerTag(): NbtCompound {
+        val tag = NbtCompound()
+        tag.putInt("Base", DyeColor.RED.id)
+
+        val patterns = NbtList()
+        val layers = listOf(
+            "flo" to DyeColor.YELLOW.id,
+            "gra" to DyeColor.GRAY.id,
+            "moj" to DyeColor.RED.id,
+            "mr" to DyeColor.ORANGE.id,
+            "mc" to DyeColor.YELLOW.id,
+            "bri" to DyeColor.BLACK.id
+        )
+
+        layers.forEach { (pattern, color) ->
+            val layer = NbtCompound()
+            layer.putString("Pattern", pattern)
+            layer.putInt("Color", color)
+            patterns.add(layer)
+        }
+
+        tag.put("Patterns", patterns)
+        return tag
+    }
+
     private fun createFlameShieldStack(): ItemStack {
         val stack = ItemStack(Items.SHIELD)
         val marker = NbtCompound()
@@ -1809,6 +1835,7 @@ object DungeonRuntime {
         val customData = NbtCompound()
         customData.put(CUSTOM_DATA_ROOT, marker)
         stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(customData))
+        stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(createFlameShieldBannerTag()))
         stack.set(
             DataComponentTypes.CUSTOM_NAME,
             Text.literal(FLAME_SHIELD_DISPLAY_NAME).formatted(Formatting.RED, Formatting.BOLD)
@@ -2028,6 +2055,10 @@ object DungeonRuntime {
             }
             PartyService.endDungeon(new, PartyService.PartyEndReason.LIVES_DEPLETED)
         }
+    }
+
+    fun onBeforePlayerDamaged(player: ServerPlayerEntity, source: DamageSource) {
+        maybeIgniteAttacker(player, source)
     }
 
     fun onPlayerDamaged(player: ServerPlayerEntity, source: DamageSource) {
