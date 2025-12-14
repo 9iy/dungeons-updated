@@ -97,6 +97,12 @@ class Dungeons : ModInitializer {
                 DungeonRuntime.onPlayerDeath(entity)
             }
         }
+        ServerLivingEntityEvents.ALLOW_DAMAGE.register { entity, source, _ ->
+            if (entity is ServerPlayerEntity) {
+                DungeonRuntime.onBeforePlayerDamaged(entity, source)
+            }
+            true
+        }
         ServerLivingEntityEvents.AFTER_DAMAGE.register { entity, source, _, _, _ ->
             if (entity is ServerPlayerEntity) {
                 DungeonRuntime.onPlayerDamaged(entity, source)
