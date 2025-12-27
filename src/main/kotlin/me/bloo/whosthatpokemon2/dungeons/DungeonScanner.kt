@@ -5,6 +5,7 @@ import net.minecraft.registry.Registries
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonConfig
 import kotlin.math.max
 import kotlin.math.min
 

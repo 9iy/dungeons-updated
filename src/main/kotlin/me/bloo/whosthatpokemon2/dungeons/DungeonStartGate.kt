@@ -1,6 +1,7 @@
 package me.bloo.whosthatpokemon2.dungeons
 
 import me.bloo.whosthatpokemon2.dungeons.economy.DungeonPasses
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonGameplayConfig
 import java.time.Duration
 import java.time.Instant
 import java.util.UUID

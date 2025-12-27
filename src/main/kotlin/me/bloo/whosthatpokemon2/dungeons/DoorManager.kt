@@ -8,6 +8,7 @@ import net.minecraft.block.LeverBlock
 import net.minecraft.block.TorchBlock
 import net.minecraft.block.TripwireBlock
 import net.minecraft.block.TripwireHookBlock
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonConfig
 import net.minecraft.block.VineBlock
 import net.minecraft.block.WallTorchBlock
 import net.minecraft.registry.RegistryKey

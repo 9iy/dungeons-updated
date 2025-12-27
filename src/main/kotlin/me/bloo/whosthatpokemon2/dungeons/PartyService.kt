@@ -12,6 +12,10 @@ import net.minecraft.sound.SoundEvents
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonConfig
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonTypeDisplayConfig
+import me.bloo.whosthatpokemon2.dungeons.message.DungeonMessageType
+import me.bloo.whosthatpokemon2.dungeons.message.sendDungeonMessage
 import java.time.Instant
 import java.util.*
 import kotlin.math.abs

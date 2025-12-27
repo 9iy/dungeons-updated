@@ -2,6 +2,7 @@ package me.bloo.whosthatpokemon2.dungeons
 
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonConfigPaths
 import java.nio.file.Files
 import java.util.UUID
 

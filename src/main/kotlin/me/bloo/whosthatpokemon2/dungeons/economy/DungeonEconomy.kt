@@ -1,8 +1,8 @@
 package me.bloo.whosthatpokemon2.dungeons.economy
 
-import me.bloo.whosthatpokemon2.dungeons.DungeonGameplayConfig
-import me.bloo.whosthatpokemon2.dungeons.DungeonMessageType
-import me.bloo.whosthatpokemon2.dungeons.sendDungeonMessage
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonGameplayConfig
+import me.bloo.whosthatpokemon2.dungeons.message.DungeonMessageType
+import me.bloo.whosthatpokemon2.dungeons.message.sendDungeonMessage
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.network.ServerPlayerEntity
 import java.util.UUID

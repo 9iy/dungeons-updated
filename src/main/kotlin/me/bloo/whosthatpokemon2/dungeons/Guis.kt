@@ -18,6 +18,10 @@ import net.minecraft.util.Formatting
 import java.nio.charset.StandardCharsets
 import net.minecraft.text.Text
 import net.minecraft.registry.Registries
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonTypeDisplay
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonTypeDisplayConfig
+import me.bloo.whosthatpokemon2.dungeons.message.DungeonMessageType
+import me.bloo.whosthatpokemon2.dungeons.message.sendDungeonMessage
 import net.minecraft.util.Identifier
 import java.util.*
 

@@ -1,4 +1,4 @@
-package me.bloo.whosthatpokemon2.dungeons
+package me.bloo.whosthatpokemon2.dungeons.config
 
 import com.google.gson.GsonBuilder
 import java.nio.file.Files
