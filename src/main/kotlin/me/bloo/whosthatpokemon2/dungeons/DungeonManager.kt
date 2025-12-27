@@ -2,6 +2,10 @@ package me.bloo.whosthatpokemon2.dungeons
 
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonConfigPaths
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonTypeConfig
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonTypeDisplayConfig
+import me.bloo.whosthatpokemon2.dungeons.config.DungeonLootConfig
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.ThreadLocalRandom

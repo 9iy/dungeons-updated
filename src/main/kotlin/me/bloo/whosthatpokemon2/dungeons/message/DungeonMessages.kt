@@ -1,4 +1,4 @@
-package me.bloo.whosthatpokemon2.dungeons
+package me.bloo.whosthatpokemon2.dungeons.message
 
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity

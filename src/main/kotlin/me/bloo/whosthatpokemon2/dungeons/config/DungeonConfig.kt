@@ -1,6 +1,9 @@
-package me.bloo.whosthatpokemon2.dungeons
+package me.bloo.whosthatpokemon2.dungeons.config
 
 import com.google.gson.GsonBuilder
+import me.bloo.whosthatpokemon2.dungeons.BlockPosDto
+import me.bloo.whosthatpokemon2.dungeons.DungeonConstants
+import me.bloo.whosthatpokemon2.dungeons.DungeonWorldResolver
 import java.nio.file.Files
 
 /** Load configurable block identifiers and related bits for dungeon scanning. */
