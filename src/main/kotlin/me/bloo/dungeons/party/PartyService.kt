@@ -10,11 +10,13 @@ import me.bloo.dungeons.dungeon.scan.DungeonScanLogger
 import me.bloo.dungeons.dungeon.scan.DungeonScanner
 import me.bloo.dungeons.dungeon.scan.DungeonWorldResolver
 import me.bloo.dungeons.economy.DungeonEconomy
+import me.bloo.dungeons.message.DungeonMessages
 import me.bloo.dungeons.message.DungeonMessageType
 import me.bloo.dungeons.message.sendDungeonMessage
 import me.bloo.dungeons.player.PlayerEffects
 import me.bloo.dungeons.sound.SoundService
 import me.bloo.dungeons.ui.Guis
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.registry.RegistryKey
@@ -163,7 +165,14 @@ object PartyService {
         if (!party.isPublic) return Result(false, "That party isn’t public.")
         if (party.order.size >= MAX_MEMBERS) return Result(false, "That party is full.")
         party.order.add(player.uuid); party.ready[player.uuid] = false; playerPartyId[player.uuid] = party.id
-        notifyParty(party, "${player.gameProfile.name} joined ${party.name}.")
+            notifyParty(
+                party,
+                "party.member_joined",
+                "<yellow><player></yellow> joined <yellow><party></yellow>.",
+                type = DungeonMessageType.NORMAL,
+                DungeonMessages.placeholder("player", player.gameProfile.name),
+                DungeonMessages.placeholder("party", party.name)
+            )
         Guis.refreshPartyGui(party)
         Guis.refreshPublicPartiesGui()
         return Result(true, "Joined ${party.name}.")
@@ -191,7 +200,14 @@ object PartyService {
         if (party.order.size >= MAX_MEMBERS) { declineInvite(player.uuid, invite); return Result(false, "That party is full.") }
         party.order.add(player.uuid); party.ready[player.uuid] = false; playerPartyId[player.uuid] = party.id
         declineInvite(player.uuid, invite)
-        notifyParty(party, "${player.gameProfile.name} joined ${party.name}.")
+            notifyParty(
+                party,
+                "party.member_joined",
+                "<yellow><player></yellow> joined <yellow><party></yellow>.",
+                type = DungeonMessageType.NORMAL,
+                DungeonMessages.placeholder("player", player.gameProfile.name),
+                DungeonMessages.placeholder("party", party.name)
+            )
         Guis.refreshPartyGui(party)
         return Result(true, "Joined ${party.name}.")
     }
@@ -209,7 +225,14 @@ object PartyService {
                     party.order.remove(player.uuid)
                     party.ready.remove(player.uuid)
                     playerPartyId.remove(player.uuid)
-                    notifyParty(party, "$name left ${party.name}.")
+                    notifyParty(
+                        party,
+                        "party.member_left",
+                        "<yellow><player></yellow> left <yellow><party></yellow>.",
+                        type = DungeonMessageType.NORMAL,
+                        DungeonMessages.placeholder("player", name),
+                        DungeonMessages.placeholder("party", party.name)
+                    )
                     Guis.refreshPartyGui(party)
                     if (party.isPublic) Guis.refreshPublicPartiesGui()
                     if (party.order.isEmpty()) {
@@ -244,7 +267,14 @@ object PartyService {
         party.selectedType = type
         val recipients = party.order.filter { it != player.uuid }
         if (recipients.isNotEmpty()) {
-            notifyAll(recipients, "Selected dungeon: $displayName")
+            notifyAll(
+                recipients,
+                "party.dungeon.selected",
+                "<yellow><player></yellow> selected <aqua><dungeon></aqua>.",
+                DungeonMessageType.NORMAL,
+                DungeonMessages.placeholder("player", player.gameProfile.name),
+                DungeonMessages.placeholder("dungeon", displayName)
+            )
         }
         Guis.refreshPartyGui(party)
         return Result(true, "Selected $displayName")
@@ -281,7 +311,13 @@ object PartyService {
                 }.toMap()
                 if (initialBlocked.isNotEmpty()) {
                     val summary = DungeonStartGate.formatBlockedReasons(party, initialBlocked)
-                    notifyParty(party, summary, DungeonMessageType.ERROR)
+                    notifyParty(
+                        party,
+                        "party.ready.summary",
+                        "<yellow><summary></yellow>",
+                        DungeonMessageType.ERROR,
+                        DungeonMessages.placeholder("summary", summary)
+                    )
                     return@outer Result(false, summary)
                 }
 
@@ -301,7 +337,7 @@ object PartyService {
                     ?: run {
                         val dimensionLabel = dungeon.dimension ?: "configured dimension"
                         val message = "Failed to start dungeon: World '$dimensionLabel' is unavailable."
-                        notifyParty(party, message, DungeonMessageType.ERROR)
+                        notifyParty(party, "party.type.select", message, DungeonMessageType.ERROR)
                         return@outer releaseAndReturn(Result(false, message))
                     }
 
@@ -324,7 +360,13 @@ object PartyService {
                 }.toMap()
                 if (commitBlocked.isNotEmpty()) {
                     val summary = DungeonStartGate.formatBlockedReasons(party, commitBlocked)
-                    notifyParty(party, summary, DungeonMessageType.ERROR)
+                    notifyParty(
+                        party,
+                        "party.start.requirements",
+                        "<red><summary></red>",
+                        DungeonMessageType.ERROR,
+                        DungeonMessages.placeholder("summary", summary)
+                    )
                     return@outer releaseAndReturn(Result(false, summary))
                 }
 
@@ -336,7 +378,13 @@ object PartyService {
                 if (!outcome.success) {
                     val message = outcome.error ?: "Failed to validate start requirements."
                     val display = "Failed to start dungeon: $message"
-                    notifyParty(party, "⛔ $message", DungeonMessageType.ERROR)
+                    notifyParty(
+                        party,
+                        "party.start.blocked",
+                        "<red>⛔ <reason></red>",
+                        DungeonMessageType.ERROR,
+                        DungeonMessages.placeholder("reason", message)
+                    )
                     return@outer releaseAndReturn(Result(false, display))
                 }
 
@@ -361,7 +409,13 @@ object PartyService {
                         }
                     }
                     val failureMessage = chargeOutcome.message ?: "Failed to process dungeon entry fee."
-                    notifyParty(party, "⛔ $failureMessage", DungeonMessageType.ERROR)
+                    notifyParty(
+                        party,
+                        "party.start.fail",
+                        "<red>⛔ <reason></red>",
+                        DungeonMessageType.ERROR,
+                        DungeonMessages.placeholder("reason", failureMessage)
+                    )
                     return@outer releaseAndReturn(Result(false, "Failed to start dungeon: $failureMessage"))
                 }
                 chargeResult = chargeOutcome
@@ -420,7 +474,13 @@ object PartyService {
                 }
 
                 val summary = DungeonStartGate.formatSuccessSummary(party, appliedCommit.timersStarted)
-                notifyParty(party, summary)
+                notifyParty(
+                    party,
+                    "party.ready.summary",
+                    "<yellow><summary></yellow>",
+                    type = DungeonMessageType.NORMAL,
+                    DungeonMessages.placeholder("summary", summary)
+                )
                 val timerNames = appliedCommit.timersStarted.joinToString(", ") { lookupName(it) ?: it.toString() }
                 println("[Dungeons][Start] Party ${party.id} (${party.leaderName()}) started ${dungeon.name}. Timers=$timerNames")
                 println("$LOG_PREFIX Party ${party.id} entered dungeon ${dungeon.name} with ${members.size} members.")
@@ -495,7 +555,14 @@ object PartyService {
         if (target !in party.order) return Result(false, "That player isn't in your party.")
         removeFromDisconnectIndex(target)
         party.order.remove(target); party.ready.remove(target); playerPartyId.remove(target)
-        notifyParty(party, "${lookupName(target) ?: "Player"} was removed from ${party.name}.")
+        notifyParty(
+            party,
+            "party.member_removed",
+            "<yellow><player></yellow> was removed from <yellow><party></yellow>.",
+            type = DungeonMessageType.NORMAL,
+            DungeonMessages.placeholder("player", lookupName(target) ?: "Player"),
+            DungeonMessages.placeholder("party", party.name)
+        )
         server?.playerManager?.getPlayer(target)?.sendDungeonMessage(
             "You were removed from ${party.name}.",
             DungeonMessageType.ERROR
@@ -519,7 +586,14 @@ object PartyService {
                     party.order.remove(player.uuid)
                     party.ready.remove(player.uuid)
                     playerPartyId.remove(player.uuid)
-                    notifyParty(party, "${player.gameProfile.name} left ${party.name}.")
+                    notifyParty(
+                        party,
+                        "party.member_left",
+                        "<yellow><player></yellow> left <yellow><party></yellow>.",
+                        type = DungeonMessageType.NORMAL,
+                        DungeonMessages.placeholder("player", player.gameProfile.name),
+                        DungeonMessages.placeholder("party", party.name)
+                    )
                     if (party.order.isEmpty()) {
                         deleteParty(party, PartyEndReason.MEMBER_DISCONNECT)
                     } else {
@@ -530,7 +604,14 @@ object PartyService {
             }
             PartyState.ACTIVE -> {
                 markDisconnected(party, player.uuid)
-                notifyParty(party, "${player.gameProfile.name} disconnected from ${party.name}.")
+                notifyParty(
+                    party,
+                    "party.member_disconnected",
+                    "<yellow><player></yellow> disconnected from <yellow><party></yellow>.",
+                    type = DungeonMessageType.NORMAL,
+                    DungeonMessages.placeholder("player", player.gameProfile.name),
+                    DungeonMessages.placeholder("party", party.name)
+                )
                 val srv = server
                 val allOffline = srv?.let { instance ->
                     party.order.all { member -> instance.playerManager.getPlayer(member) == null }
@@ -743,17 +824,21 @@ object PartyService {
 
     private fun notifyParty(
         party: Party,
-        msg: String,
-        type: DungeonMessageType = DungeonMessageType.NORMAL
-    ) = notifyAll(party.order, msg, type)
+        key: String,
+        fallback: String,
+        type: DungeonMessageType = DungeonMessageType.NORMAL,
+        vararg placeholders: TagResolver
+    ) = notifyAll(party.order, key, fallback, type, *placeholders)
 
     private fun notifyAll(
         uuids: List<UUID>,
-        msg: String,
-        type: DungeonMessageType = DungeonMessageType.NORMAL
+        key: String,
+        fallback: String,
+        type: DungeonMessageType = DungeonMessageType.NORMAL,
+        vararg placeholders: TagResolver
     ) {
         val s = server ?: return
-        uuids.forEach { s.playerManager.getPlayer(it)?.sendDungeonMessage(msg, type) }
+        uuids.forEach { s.playerManager.getPlayer(it)?.sendDungeonMessage(key, fallback, type, *placeholders) }
     }
 
     private fun teleportPartyToEnd(party: Party): Boolean {

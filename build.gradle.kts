@@ -48,6 +48,7 @@ repositories {
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
+    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.lucko.me")
     maven("https://maven.enginehub.org/repo/")
 }
@@ -62,6 +63,10 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
 
     modImplementation("me.lucko:fabric-permissions-api:0.3.1")
+
+    modImplementation("net.kyori:adventure-text-minimessage:4.17.0")
+    modImplementation("io.github.miniplaceholders:miniplaceholders-api:2.2.3")
+    implementation("net.kyori:adventure-text-serializer-legacy:4.17.0")
 
     // WorldEdit integration for door handling
     modImplementation("com.sk89q.worldedit:worldedit-fabric-mc1.20.4:7.3.0")
