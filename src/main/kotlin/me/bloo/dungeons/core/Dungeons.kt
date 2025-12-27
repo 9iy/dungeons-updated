@@ -11,6 +11,7 @@ import me.bloo.dungeons.dungeon.world.ChunkPin
 import me.bloo.dungeons.economy.Economy
 import me.bloo.dungeons.integration.cobblemon.CobblemonFlameBodyIntegration
 import me.bloo.dungeons.integration.hookshot.HookshotServer
+import me.bloo.dungeons.message.DungeonMessages
 import me.bloo.dungeons.party.PartyService
 import me.bloo.dungeons.player.PlayerCooldownStore
 import me.bloo.dungeons.player.stats.DungeonStatsStore
@@ -38,6 +39,7 @@ class Dungeons : ModInitializer {
         }
         ServerLifecycleEvents.SERVER_STARTED.register {
             DungeonConfigPaths.ensureBaseDirectory()
+            DungeonMessages.reload()
             DungeonGameplayConfig.instance()
             val economyConfig = DungeonGameplayConfig.instance().economy
             if (economyConfig.enabled) {

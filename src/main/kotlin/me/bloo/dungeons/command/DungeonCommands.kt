@@ -46,6 +46,7 @@ import me.bloo.dungeons.dungeon.secret.SecretRoomDefinition
 import me.bloo.dungeons.dungeon.secret.SecretRoomManager
 import me.bloo.dungeons.dungeon.world.ChunkPin
 import me.bloo.dungeons.integration.hookshot.HookshotServer
+import me.bloo.dungeons.message.DungeonMessages
 import me.bloo.dungeons.message.DungeonMessageType
 import me.bloo.dungeons.message.sendDungeonError
 import me.bloo.dungeons.message.sendDungeonFeedback
@@ -137,7 +138,10 @@ object DungeonCommands {
                                         if (res.success) DungeonMessageType.NORMAL else DungeonMessageType.ERROR
                                     )
                                     if (res.success) target.sendDungeonMessage(
-                                        "You have a party invite from ${inviter.gameProfile.name}. Use /dungeon party invites."
+                                        "party.invite.received",
+                                        "You have a party invite from <yellow><player></yellow>. Use /dungeons party invites.",
+                                        DungeonMessageType.NORMAL,
+                                        DungeonMessages.placeholder("player", inviter.gameProfile.name)
                                     )
                                     1
                                 }
@@ -784,6 +788,7 @@ object DungeonCommands {
             DungeonLootConfig.reload()
             GoodChestLootConfig.reload()
             DungeonManager.reload()
+            DungeonMessages.reload()
             DungeonScanCache.clear()
             source.sendDungeonFeedback("Dungeon configs reloaded.", broadcastToOps = true)
             return 1
