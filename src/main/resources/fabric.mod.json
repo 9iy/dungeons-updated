@@ -11,10 +11,10 @@
   "environment": "server",
   "entrypoints": {
     "main": [
-      { "adapter": "kotlin", "value": "me.bloo.whosthatpokemon2.dungeons.Dungeons" }
+      { "adapter": "kotlin", "value": "me.bloo.dungeons.core.Dungeons" }
     ],
     "fabric-datagen": [
-      { "adapter": "kotlin", "value": "me.bloo.whosthatpokemon2.dungeons.client.DungeonsDataGenerator" }
+      { "adapter": "kotlin", "value": "me.bloo.dungeons.client.DungeonsDataGenerator" }
     ]
   },
   "mixins": [

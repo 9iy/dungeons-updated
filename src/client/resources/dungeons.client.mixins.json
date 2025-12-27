@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "me.bloo.whosthatpokemon2.dungeons.mixin.client",
+  "package": "me.bloo.dungeons.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
   ],
